@@ -49,8 +49,9 @@ const config = {
 module.exports = config; // CommonJS module, exposing module to be imported where necessary
 
 // Comment 1
-// reference to a path where output file should be stored - **ABSOLUTE PATH!**, helper from Node.js which resolve the correct // path is generated, __dirname is a constant in Node.js (reference to current working directory), once done save it to 
-// folder called build
+// reference to a path where output file should be stored - **ABSOLUTE PATH!**, helper from Node.js 
+// which resolve the correct // path is generated, __dirname is a constant in Node.js 
+// (reference to current working directory), once done save it to folder called build
 ```
 
 
