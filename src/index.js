@@ -7,5 +7,7 @@
 
 // ES6 import 
 import sum from './sum';
+import './image_viewer'; // no import from... beacuse we are no exporting/importing but just running what is in image_viewer file
+
 const total = sum(10,5);
 console.log(total);
