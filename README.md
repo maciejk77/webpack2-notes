@@ -41,7 +41,7 @@ const path = require('path'); // run by Node.js
 const config = {
   entry: './src/index.js', // entry point, starting from root folder
   output: {
-    path: 'path.resolve(__dirname, 'build')', // see below comment 1
+    path: path.resolve(__dirname, 'build'), // see below comment 1
     filename: 'bundle.js' // reference to filename of the newly created output file i.e bundle.js
   }
 };
@@ -52,6 +52,15 @@ module.exports = config; // CommonJS module, exposing module to be imported wher
 // reference to a path where output file should be stored - **ABSOLUTE PATH!**, helper from Node.js 
 // which resolve the correct // path is generated, __dirname is a constant in Node.js 
 // (reference to current working directory), once done save it to folder called build
+```
+
+- To use webpack in `package.json` replace `"scripts"` to below (double quotes both side)
+- To start in command line `npm run build` - to run locally installed webpack (in mode_modules)
+
+```javascript
+"scripts": {
+  "build": "webpack"
+},
 ```
 
 
