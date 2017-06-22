@@ -43,6 +43,14 @@ const config = {
   output: {
     path: path.resolve(__dirname, 'build'), // see below comment 1
     filename: 'bundle.js' // reference to filename of the newly created output file i.e bundle.js
+  },
+  module: {
+    rules: [
+      {
+        use: 'babel-loader',
+        test: /\.js$/
+      }
+    ]
   }
 };
 
@@ -54,7 +62,7 @@ module.exports = config; // CommonJS module, exposing module to be imported wher
 // (reference to current working directory), once done save it to folder called build
 ```
 
-- To use webpack in `package.json` replace `"scripts"` to below (double quotes both side)
+- To use webpack in `package.json` replace `"scripts"` to below (double quotes both sides)
 - To start in command line `npm run build` - to run locally installed webpack (in mode_modules)
 
 ```javascript
@@ -69,5 +77,42 @@ module.exports = config; // CommonJS module, exposing module to be imported wher
   - `babel-core` / knows how to take in code, parse it and generate some output files
   - `babel-preset-env` / ruleset for telling babel exactly what pieces of ES2015/6/7 syntax to look for and how to turn to ES5 code
   - to install all `npm install --save-dev babel-loader babel-core babel-preset-env`
+  - add `.babelrc` too root folder and run `npm run build` again
 
+```javascript
+// .babelrc
+{
+  "presets": ["babel-preset-env"]
+}
+```
+
+## Refactor CommonJS to ES6
+
+`index.js`
+```javascript
+// index.js is dependant on sum
+// sum.js is required before index.js is loaded
+
+// no need to specify .js, relative path in the same folder in this case
+// CommonJS require
+// const sum = require('./sum');
+
+// ES6 import 
+import sum from './sum';
+const total = sum(10,5);
+console.log(total);
+```
+
+`sum.js`
+```javascript
+const sum = (a, b) => a + b;
+
+// CommonJS module exporting/exposing to public access
+// module.exports = sum;
+
+// ES6 module exporting
+export default sum;
+```
+
+Rebuild with `npm run build`
 

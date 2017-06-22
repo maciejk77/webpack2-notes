@@ -68,9 +68,14 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-const sum = (a, b) => a + b;
+"use strict";
+
+
+var sum = function sum(a, b) {
+  return a + b;
+};
 
 //CommonJS module exporting/exposing to public access
 module.exports = sum;
@@ -82,13 +87,16 @@ module.exports = sum;
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
 // index.js is dependant on sum
 // sum.js is required before index.js is loaded
 
 // no need to specify .js, relative path in the same folder in this case
-const sum = __webpack_require__(0);
+var sum = __webpack_require__(0);
 
-const total = sum(10,5);
+var total = sum(10, 5);
 console.log(total);
 
 /***/ }

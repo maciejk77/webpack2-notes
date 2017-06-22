@@ -5,6 +5,14 @@ const config = {
   output: {
     path: path.resolve(__dirname, 'build'), // see below comment 1
     filename: 'bundle.js' // reference to filename of the newly created output file i.e bundle.js
+  },
+  module: {
+    rules: [
+      {
+        use: 'babel-loader',
+        test: /\.js$/, // Regex to find all .js files, Babel to be applied only to .js files
+      }
+    ]
   }
 };
 
