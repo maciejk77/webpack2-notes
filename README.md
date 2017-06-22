@@ -68,5 +68,6 @@ module.exports = config; // CommonJS module, exposing module to be imported wher
   - `babel-loader` / teaches babel how to work with Webpack
   - `babel-core` / knows how to take in code, parse it and generate some output files
   - `babel-preset-env` / ruleset for telling babel exactly what pieces of ES2015/6/7 syntax to look for and how to turn to ES5 code
+  - to install all `npm install --save-dev babel-loader babel-core babel-preset-env`
 
 
