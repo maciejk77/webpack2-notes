@@ -63,4 +63,10 @@ module.exports = config; // CommonJS module, exposing module to be imported wher
 },
 ```
 
+## Introduciton to loaders
+- Babel (turns ES2016 to native JS - transpiling)
+  - `babel-loader` / teaches babel how to work with Webpack
+  - `babel-core` / knows how to take in code, parse it and generate some output files
+  - `babel-preset-env` / ruleset for telling babel exactly what pieces of ES2015/6/7 syntax to look for and how to turn to ES5 code
+
 
