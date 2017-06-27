@@ -295,11 +295,36 @@ output: {
 //...
 "main": "index.js",
   "scripts": {
-    "clean": "rimraf" // add line here to package.json
+    "clean": "rimraf dist" // add line here to package.json
     "build": "npm run clean && webpack" // add before webpack, will delete the contents of dist directory and will start build process
    },
   "author": "",
   "license": "ISC",
 //...
 ```
+
+## webpack dev server
+
+- `webpack-dev-server` acts as a intermediary between webpck output and live page
+- once started `webpack-dev-server` is watching project files, rebuilding files whenever they change
+- files are being rebuild individually, only those where change happened will be rebuild
+- no longer loading web app via `index.js` but via `webpack-dev-server` which will feed all assets
+- `npm install --save-dev webpack-dev-serv@2.2.0-rc.0` to install package
+
+```javascript
+// package.json
+//...
+"main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist" 
+    "build": "npm run clean && webpack",
+    "serve": "webpack-dev-server" //  
+   },
+  "author": "",
+  "license": "ISC",
+//...
+```
+
+- `npm run serve` to run webpack server (once added to the package.json as above)
+
 
