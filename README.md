@@ -318,7 +318,7 @@ output: {
   "scripts": {
     "clean": "rimraf dist" 
     "build": "npm run clean && webpack",
-    "serve": "webpack-dev-server" //  
+    "serve": "webpack-dev-server" // to enable running package from command line with 'npm run serve'
    },
   "author": "",
   "license": "ISC",
