@@ -250,3 +250,56 @@ module.exports = {
 
 ```
 
+- There is a plugin to automatically insert <script> tag with references to the i.e. bundle/vendor files
+- Firstly, install plugin `npm install --save-dev html-webpack-plugin`
+```javascript
+// under webpack, path vars already declared
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+// ...
+
+      plugins: [
+        new webpack.optimize.CommonsChunkPlugin({ 
+          name: 'vendor' 
+        }),
+        new HtmlWebpackPlugin({ // this plugin will find all <script> which were generated and will add mark up to index file
+          template: 'src/index.html'
+        })
+      ]
+    ]
+  }
+};
+
+```
+
+## cache busting
+
+- renaming files to help browser to indicate whether or not source files has changed (i.e. downloading dependencies and bundling them in)
+
+```javascript
+//...
+output: {
+    path: path.join(__dirname, 'dist'),
+    filename: '[name].[chunkhush].js' // [chunkhush] will create uniquely named version of the file i.e. bundle.3924f45f.js
+  },
+//...
+```
+
+## cleaning up project files
+
+- A package to clean up the files after build i.e. uniquely named files with hashed names will add on to the list not overwrite the previous ones, hence a need to use this npm package
+- Firstly, install plugin `npm install --save-dev rifraf` // will do clean up like 'rm' command line function regardless of OS Windows or Mac
+
+```javascript
+// package.json
+//...
+"main": "index.js",
+  "scripts": {
+    "clean": "rimraf" // add line here to package.json
+    "build": "npm run clean && webpack" // add before webpack, will delete the contents of dist directory and will start build process
+   },
+  "author": "",
+  "license": "ISC",
+//...
+```
+
