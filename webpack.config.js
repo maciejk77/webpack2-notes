@@ -5,7 +5,8 @@ const config = {
   entry: './src/index.js', // entry point, starting from root folder
   output: {
     path: path.resolve(__dirname, 'build'), // see below comment 1
-    filename: 'bundle.js' // reference to filename of the newly created output file i.e bundle.js
+    filename: 'bundle.js', // reference to filename of the newly created output file i.e bundle.js
+    publicPath: 'build/' // publicPath does its magic ;)
   },
   module: {
     rules: [
@@ -19,6 +20,16 @@ const config = {
           loader: 'css-loader' // some amount of preprocessing before files is included into Webpack bundle
         }), // 'use' above is in common use, 'loader' is legacy but used here for ExtractTextPlugin - way it is 
         test: /\.css$/
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/, // Regex to pick up all major image formats
+        use: [
+          {
+            loader: 'url-loader',
+            options: { loader: 40000 } // files up to 40kB include in bundle.js, otherwise in build directory
+          },
+          'image-webpack-loader'
+        ]
       }
     ]
   },

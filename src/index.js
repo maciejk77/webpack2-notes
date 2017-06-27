@@ -1,13 +1,9 @@
-// index.js is dependant on sum
-// sum.js is required before index.js is loaded
+const buttons = document.createElement('button');
+button.innerText = 'Click me';
+button.onclick = () => {
+  System.import('./image_viewer').then(module => { // an idea how to import module into the web page, Promise which when fullfilled then will console log object in this example
+    console.log(module);
+  });
+};
 
-// no need to specify .js, relative path in the same folder in this case
-// CommonJS require
-// const sum = require('./sum');
-
-// ES6 import 
-import sum from './sum';
-import './image_viewer'; // no import from... beacuse we are no exporting/importing but just running what is in image_viewer file
-
-const total = sum(10,5);
-console.log(total);
+document.body.appendChild(button);

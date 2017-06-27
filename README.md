@@ -160,7 +160,7 @@ module.exports = config; // CommonJS module, exposing module to be imported wher
 
 ```javascript
 
-// With plugin and loader added, index.html doesn not include CSS styles in <head> tag but CSS bundle styles.css
+// With plugin and loader added, index.html does not include CSS styles in <head> tag but CSS bundle styles.css
       {
         // use: ['style-loader', 'css-loader'], // NOTE: loaders are applied from right to left!!
         loader: ExtractTextPlugin.extract({
@@ -175,3 +175,78 @@ module.exports = config; // CommonJS module, exposing module to be imported wher
   ]
 };
 ```
+
+## Dealing with images
+
+- `image-webpack-loader` / compress images automatically
+- `url-loader` / saves small image up to 10k as raw data in bundle.js, if big size will be save as raw data in build directory
+  - Install with `npm install --save-dev image-webpack-loader url-loader`
+
+## Code splitting
+
+- Load only the least amount the code for the given task e.g. login page only JS code handling form
+
+`image_viewer.js` has the defualt export
+```javascript
+export default () => {  
+const image = document.createElement('img');
+image.src = small;
+
+document.body.appendChild(image);
+};
+```
+
+
+```javascript
+const buttons = document.createElement('button');
+button.innerText = 'Click me';
+button.onclick = () => {
+  System.import('./image_viewer').then(module => { // an way to import module into the web page, Promise which when fullfilled then will return default module
+    module.default();
+  });
+};
+
+document.body.appendChild(button);
+```
+
+- An extended example of code splitting with code split into bundle and vendor, making sure that code is not repeated
+
+```javascript
+var webpack = require('webpack');
+var path = require('path');
+
+const VENDOR_LIBS = [
+  'react', 'lodash', 'redux', 'react-redux, react-dom', 'faker' // and other npm modules here
+];
+
+module.exports = {
+  entry: { 
+    bundle: './src/index.js',
+    vendor: VENDOR_LIBS
+  },
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: '[name].js' // [name] will be replaced by bundle, vendor
+  },
+  module: {
+    rules: [
+      {
+        use: 'babel-loader',
+        test: /\.js$/,
+        exclude: /node_modules/          
+      }, 
+      {
+        use: ['style-loader', 'css-loader'],
+        test: /\.css$/
+      },
+      plugins: [
+        new webpack.optimize.CommonsChunkPlugin({ // plugin looks at total file e.g. bundle, vendor files and make sure that code is not being repeated
+          name: 'vendor' // compare vendor and bundle if code repeats pull it out and put it into vendor only
+        })
+      ]
+    ]
+  }
+};
+
+```
+
