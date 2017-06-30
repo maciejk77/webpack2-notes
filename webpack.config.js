@@ -34,7 +34,17 @@ const config = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin('style.css') // ExtractText looks for files transformed by 'css-loader' and are saved to styles.css file output, all css files will be included here
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor', 'manifest']
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/index.html'
+    }),
+    // use DefinePlugin to make NODE_ENV i.e. equlas production string available on the window scope (beowser window)
+    new webpack.DefinePlugin({
+      // this makes sure that if returned string is production the error checking will be disabled and perfrormance improves further
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    })
   ]
 };
 

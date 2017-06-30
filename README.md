@@ -296,7 +296,9 @@ output: {
 "main": "index.js",
   "scripts": {
     "clean": "rimraf dist" // add line here to package.json
-    "build": "npm run clean && webpack" // add before webpack, will delete the contents of dist directory and will start build process
+    // add before webpack, will delete the contents of dist directory and will start build process
+    // - flags minifies, compacts down code, rename variables etc. 
+    "build": "npm run clean && webpack -p" 
    },
   "author": "",
   "license": "ISC",
@@ -327,4 +329,147 @@ output: {
 
 - `npm run serve` to run webpack server (once added to the package.json as above)
 
+## deployment - static assets vs server based
 
+### static asset providers
+- Github pages
+- Amazon S3
+- Digital Ocean
+- MS Azure
+- surge
+
+### server-based providers 
+- Amazon EC2
+- Amazon ELB
+- Digital Ocean
+- Heroku
+- MS Azure
+
+```javascript
+// package.json
+  
+ ...
+ "main": "index.js",
+  "scripts": {
+    // making sure that when REACT runs it will run in correct environment
+    "build": "NODE_ENV=production npm run clean && webpack"
+  ...
+
+ ...
+ }),
+    // use DefinePlugin to make NODE_ENV i.e. equlas production string available on the window scope (beowser window)
+    new webpack.DefinePlugin({
+      // this makes sure that if returned string is production the error checking will be disabled and perfrormance improves further
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    })
+    ...
+
+```
+
+### surge.sh
+
+- To install `npm install -g surge`
+- Change to folder and deploy `npm build` to have up to date build version of the app
+- Run deployment `surge -p dist`
+
+### github pages
+
+- Create new github repo <Repo Name>
+- Get the HTTPS or SSH link
+- `git init` => `git add .` => `git commit -m "Final commit"` => `git remote add origin <HTTPS or SSH link here>`
+- Switch to new branch gh-pages `git checkout -b gh-pages` 
+- Deploy only **dist** folder `git subtree push --prefix dist origin gh-pages`
+- Project should be now on `https://maciejk77.github.io/<Repo Name>`
+
+// here is an option to automatic deployment
+```javascript
+ ...
+ "main": "index.js",
+  "scripts": {
+    "build": "NODE_ENV=production npm run clean && webpack",
+    ...
+    "deploy": "npm run build && git subtree push --prefix dist origin gh-pages"
+  ...
+```
+- run in command line 'npm run deploy'
+
+## AWS S3
+
+- get access to AWS account
+- get security credentials **Access Key ID** and **Secret Access Key** // be careful not to publish secret keys publicly
+- create `.env` file in root folder and store variables 
+``
+AWS_ACCESS_KEY_ID=ABCDFERGG... 
+AWS_SECRET_ACCESS_KEY=efljgnmSDTRdfmks...
+``` 
+
+- deploy in command line (create bucket) `s3-website create webpack-deploy`
+- deploy app `s3-website deploy dist`
+- rerun deployment if needed by `npm run build` and `s3-webite deploy dist`
+- clean up delete bucket and build so not to share access keys publicly etc.
+
+ ### Node and Webpack integration
+
+- Install Express.js `npm install --save express`
+- Create server.js in root folder `node server.js` to run it
+
+```javascript
+// server.js
+const express = require('express');
+const app = express();
+app.listen(3030, () => console.log('Listening at port 3030'));
+
+```
+
+- wiring up `webpack-middleware` // will 'snatch' application assets withing the same Node instance already running
+- install `npm install --save-dev webpack-dev-middleware`
+- change server.js to below
+
+```javascript
+// server.js
+const express = require('express');
+const webpackMiddleware = require('webpack-dev-middleware');
+const webpack = require('webpack');
+const webpackConfig = require('./webpack.config.js');
+
+const app = express();
+
+app.use(webpackMiddleWare(webpack(webpackConfig)));
+app.listen(3030, () => console.log('Listening at port 3030'));
+
+```
+- run server with `node server.js`
+- in case we are not in production we only load the resources, moved to if() scope - see below
+
+```javascript
+// server.js
+const express = require('express');
+const app = express();
+
+// IMPORTANT!
+// You will add additional routes, authentication etc. above NODE_ENV logic
+// i.e.
+app.get('hello', (req, res) => res.send({ hi: 'there' }));
+
+if(process.env.NODE_ENV !== 'production') {
+
+  const webpackMiddleware = require('webpack-dev-middleware');
+  const webpack = require('webpack');
+  const webpackConfig = require('./webpack.config.js');  
+  const path = require('path');
+
+  app.use(webpackMiddleWare(webpack(webpackConfig)));
+} else { // running in production case
+  app.use(express.static('dist'));
+  // in case there was a GET request to fetch files, go ahead and serve index.html from dist folder
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/index.html'));
+  });
+}
+
+// app.listen(3030, () => console.log('Listening at port 3030'));
+// above is to be refactored to below to handle default port enforced by Heroku etc.
+app.listen(process.env.PORT || 3030, () => console.log('Listening')); // use PORT provided by i.e. Heroku otherwise default to 3030
+```
+
+- start node server with correct env in commanf line `NODE_ENV=production node server.js`
