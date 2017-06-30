@@ -471,5 +471,26 @@ if(process.env.NODE_ENV !== 'production') {
 // above is to be refactored to below to handle default port enforced by Heroku etc.
 app.listen(process.env.PORT || 3030, () => console.log('Listening')); // use PORT provided by i.e. Heroku otherwise default to 3030
 ```
-
 - start node server with correct env in commanf line `NODE_ENV=production node server.js`
+
+### heroku
+
+- create `Procfile` in root folder
+- heroku works with github repos
+  - `git init` => `git add .` => `git commit -m "Inital commit"`
+  - sign up for heroku account
+  - install heroku cli from website
+  - in command line `heroku` => log in etc.
+  - `heroku create` creates app and set automatically remote git target
+  - deploy `git push heroku master`
+  - run `heroku logs` if encounter any error messages
+  - open and start app `heroku open`
+  - if there is any change to code run `npm run build` and continue again with git add/commit/push as above
+```javascript
+// Procfile
+web: node server.js // what to start as web server
+```
+
+
+
+
