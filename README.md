@@ -398,7 +398,8 @@ output: {
 - get access to AWS account
 - get security credentials **Access Key ID** and **Secret Access Key** // be careful not to publish secret keys publicly
 - create `.env` file in root folder and store variables 
-``
+
+```javascript
 AWS_ACCESS_KEY_ID=ABCDFERGG... 
 AWS_SECRET_ACCESS_KEY=efljgnmSDTRdfmks...
 ``` 
